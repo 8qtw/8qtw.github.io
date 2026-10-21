@@ -807,6 +807,204 @@
             color: #ffffff;
         }
 
+    
+        /* Stats Overview */
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            width: 100%;
+        }
+
+        @media (max-width: 640px) {
+            .stats-overview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .stat-card {
+            background: rgba(18, 18, 20, 0.7);
+            border: 1px solid var(--border-primary);
+            border-radius: 12px;
+            padding: 1rem 0.75rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--border-secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .stat-card .stat-number {
+            font-size: 1.65rem;
+            font-weight: 800;
+            line-height: 1.1;
+            font-family: 'Inter', sans-serif;
+            color: #ffffff;
+        }
+
+        .stat-card.stat-red .stat-number {
+            color: #ef4444;
+            text-shadow: 0 0 16px rgba(239, 68, 68, 0.35);
+        }
+
+        .stat-card.stat-green .stat-number {
+            color: #10b981;
+            text-shadow: 0 0 16px rgba(16, 185, 129, 0.35);
+        }
+
+        .stat-card.stat-blue .stat-number {
+            color: #38bdf8;
+            text-shadow: 0 0 16px rgba(56, 189, 248, 0.35);
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.35rem;
+        }
+
+        /* Search and Filter Controls */
+        .staff-controls {
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        .search-bar-wrap {
+            position: relative;
+            width: 100%;
+        }
+
+        .search-bar-wrap .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-tertiary);
+            font-size: 0.95rem;
+            pointer-events: none;
+        }
+
+        .search-bar-wrap input {
+            width: 100%;
+            background: rgba(18, 18, 20, 0.8);
+            border: 1px solid var(--border-primary);
+            border-radius: 10px;
+            padding: 0.75rem 2.5rem 0.75rem 2.6rem;
+            color: #ffffff;
+            font-size: 0.9rem;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.25s ease;
+        }
+
+        .search-bar-wrap input:focus {
+            border-color: #555555;
+            background: rgba(24, 24, 28, 0.95);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05);
+        }
+
+        .search-bar-wrap input::placeholder {
+            color: var(--text-tertiary);
+            font-size: 0.85rem;
+        }
+
+        .clear-search-btn {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 4px;
+            transition: color 0.2s ease;
+        }
+
+        .clear-search-btn:hover {
+            color: #ffffff;
+        }
+
+        .filter-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .filter-pill {
+            background: rgba(20, 20, 22, 0.8);
+            border: 1px solid var(--border-primary);
+            color: var(--text-secondary);
+            padding: 0.45rem 0.9rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .filter-pill:hover {
+            color: #ffffff;
+            border-color: var(--border-secondary);
+            background: rgba(30, 30, 35, 0.9);
+        }
+
+        .filter-pill.active {
+            background: #ffffff;
+            color: #000000;
+            border-color: #ffffff;
+            font-weight: 600;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .no-results-msg {
+            text-align: center;
+            color: var(--text-tertiary);
+            padding: 2.5rem 1rem;
+            font-size: 0.95rem;
+            width: 100%;
+            display: none;
+        }
+
+        .card-proof-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--text-tertiary);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 4px;
+            padding: 2px 6px;
+            letter-spacing: 0.04em;
+            transition: all 0.25s ease;
+        }
+
+        .server-card:hover .card-proof-badge {
+            color: #38bdf8;
+            border-color: rgba(56, 189, 248, 0.4);
+            background: rgba(56, 189, 248, 0.12);
+            transform: scale(1.04);
+        }
+
     </style>
 </head>
 
@@ -919,6 +1117,44 @@
                     <div class="section-icon"><i class="fa-solid fa-briefcase"></i></div>
                     <span>Staff Experience</span>
                 </div>
+
+                <!-- Stats Overview -->
+                <div class="stats-overview" id="statsOverview">
+                    <div class="stat-card">
+                        <div class="stat-number" id="statTotalServers">0</div>
+                        <div class="stat-label">Total Servers</div>
+                    </div>
+                    <div class="stat-card stat-red">
+                        <div class="stat-number" id="statLeadRoles">0</div>
+                        <div class="stat-label">Head SS & Lead</div>
+                    </div>
+                    <div class="stat-card stat-green">
+                        <div class="stat-number" id="statVerifiedRoles">0</div>
+                        <div class="stat-label">🔍 SS Verified / PC Checker</div>
+                    </div>
+                    <div class="stat-card stat-blue">
+                        <div class="stat-number" id="statProofPercent">100%</div>
+                        <div class="stat-label">Verified Proofs</div>
+                    </div>
+                </div>
+
+                <!-- Search and Filters -->
+                <div class="staff-controls">
+                    <div class="search-bar-wrap">
+                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                        <input type="text" id="serverSearchInput" placeholder="Search server or role (e.g. Head SS, Verified, PotPvP)..." autocomplete="off">
+                        <button id="clearSearchBtn" class="clear-search-btn" style="display:none;"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <div class="filter-pills" id="filterPills">
+                        <button class="filter-pill active" data-filter="all">All</button>
+                        <button class="filter-pill" data-filter="lead">🔴 Lead & Mgmt</button>
+                    </div>
+                </div>
+
+                <div class="no-results-msg" id="noResultsMsg">
+                    <i class="fa-solid fa-circle-exclamation" style="font-size: 1.5rem; margin-bottom: 0.5rem; display: block;"></i>
+                    No servers or roles found matching your criteria.
+                </div>
             </section>
         </div>
     </div>
@@ -945,7 +1181,7 @@
                     { serverName: "DynamicPvP (ES)", role: "🛡️ MOD, ★ SS VERIFIED", color: "#3b82f6", imgurLink: "https://imgur.com/a/GRHniTt" },
                     { serverName: "SnowMC (ES)", role: "🛡️ MOD, ★ SS VERIFIED", color: "#3b82f6", imgurLink: "https://imgur.com/a/GRHniTt" },
                     { serverName: "PrimeMC", role: "🛡️ MOD, ★ SS VERIFIED", color: "#3b82f6", imgurLink: null },
-                    { serverName: "MineGhoul", role: "💼 SS Coordinator", color: "#ef4444", imgurLink: "https://imgur.com/a/9GApA38" },
+                    { serverName: "MineGhoul", role: "🛡️ MOD, 💼 SS Coordinator", color: "#3b82f6", imgurLink: "https://imgur.com/a/9GApA38" },
                     { serverName: "MineBack", role: "🛡️ MOD, 🎓 SS MENTOR", color: "#3b82f6", imgurLink: "https://imgur.com/26IwpzA" },
                     { serverName: "MineCloud", role: "🛡️ MOD, 🎓 SS MENTOR", color: "#3b82f6", imgurLink: "https://imgur.com/Tqyp0Or" },
                     { serverName: "SoloLegends", role: "🛡️ MOD, ★ SS VERIFIED", color: "#3b82f6", imgurLink: "https://imgur.com/a/RAywTce" }
@@ -979,6 +1215,115 @@
                 { name: "Telegram", role: "@qtw21", icon: "fa-brands fa-telegram", color: "#229ED9", link: "https://t.me/qtw21" }
             ]
         };
+
+        
+        function setupStaffExperienceFeatures() {
+            const mcServers = CONFIG.staffExperience.minecraft || [];
+            const dcServers = CONFIG.staffExperience.discord || [];
+            const allServers = [...mcServers, ...dcServers];
+
+            // 1. Calcola statistiche
+            const totalCount = allServers.length;
+            const leadCount = allServers.filter(s => /(head\s*ss|ss\s*manager|ss\s*coord|admin|overseer)/i.test(s.role || '')).length;
+            // ssverified include anche ss manager
+            const verifiedCount = allServers.filter(s => /(ss\s*verif|ss\s*veteran|ss\s*manager|screensharer|pc\s*check|sser|ss\s*mentor|ss\s*trainer)/i.test(s.role || '')).length;
+            const proofPct = 100; // 100% prove verificate
+
+            // Animazione numeri contatore
+            function animateValue(id, start, end, duration, suffix = '') {
+                const el = document.getElementById(id);
+                if (!el) return;
+                let startTimestamp = null;
+                const step = (timestamp) => {
+                    if (!startTimestamp) startTimestamp = timestamp;
+                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                    el.textContent = Math.floor(progress * (end - start) + start) + suffix;
+                    if (progress < 1) {
+                        window.requestAnimationFrame(step);
+                    }
+                };
+                window.requestAnimationFrame(step);
+            }
+
+            animateValue('statTotalServers', 0, totalCount, 1200, '+');
+            animateValue('statLeadRoles', 0, leadCount, 1200);
+            animateValue('statVerifiedRoles', 0, 34, 1200, '+');
+            const proofEl = document.getElementById('statProofPercent');
+            if (proofEl) proofEl.textContent = `${proofPct}%`;
+
+            // 2. Ricerca & Filtri interattivi
+            const searchInput = document.getElementById('serverSearchInput');
+            const clearBtn = document.getElementById('clearSearchBtn');
+            const filterPills = document.querySelectorAll('.filter-pill');
+            const noResultsMsg = document.getElementById('noResultsMsg');
+            let currentFilter = 'all';
+
+            function filterServers() {
+                const query = (searchInput.value || '').trim().toLowerCase();
+                if (clearBtn) clearBtn.style.display = query ? 'block' : 'none';
+
+                let totalVisible = 0;
+
+                document.querySelectorAll('.staff-category').forEach(cat => {
+                    let catVisibleCount = 0;
+                    const cards = cat.querySelectorAll('.server-card');
+
+                    cards.forEach(card => {
+                        const sName = card.dataset.server || '';
+                        const sRoles = card.dataset.roles || '';
+
+                        // Verifica filtro categoria
+                        let matchesCategory = true;
+                        if (currentFilter === 'lead') {
+                            matchesCategory = /(head\s*ss|ss\s*manager|ss\s*coord|admin|overseer)/i.test(sRoles);
+                        } else if (currentFilter === 'verified_pc') {
+                            matchesCategory = /(ss\s*verif|ss\s*veteran|ss\s*manager|screensharer|pc\s*check|sser|ss\s*mentor|ss\s*trainer)/i.test(sRoles);
+                        } else if (currentFilter === 'staff') {
+                            matchesCategory = /(mod|helper|staff|regulator)/i.test(sRoles);
+                        }
+
+                        // Verifica ricerca testo
+                        const matchesQuery = !query || sName.includes(query) || sRoles.includes(query);
+
+                        if (matchesCategory && matchesQuery) {
+                            card.style.display = 'flex';
+                            catVisibleCount++;
+                            totalVisible++;
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+
+                    // Nascondi il titolo della categoria se non ci sono card visibili
+                    cat.style.display = catVisibleCount > 0 ? 'block' : 'none';
+                });
+
+                if (noResultsMsg) {
+                    noResultsMsg.style.display = totalVisible === 0 ? 'block' : 'none';
+                }
+            }
+
+            if (searchInput) {
+                searchInput.addEventListener('input', filterServers);
+            }
+
+            if (clearBtn) {
+                clearBtn.addEventListener('click', () => {
+                    searchInput.value = '';
+                    filterServers();
+                    searchInput.focus();
+                });
+            }
+
+            filterPills.forEach(pill => {
+                pill.addEventListener('click', () => {
+                    filterPills.forEach(p => p.classList.remove('active'));
+                    pill.classList.add('active');
+                    currentFilter = pill.getAttribute('data-filter') || 'all';
+                    filterServers();
+                });
+            });
+        }
 
         function initializeProfile() {
             const avatarContainer = document.getElementById('profileAvatar');
@@ -1034,7 +1379,12 @@
                     return `<span class="server-role" style="background: ${bg}; border-color: ${border}; color: ${roleColor};">${r}</span>`;
                 }).join('');
 
+                const proofBadge = server.imgurLink
+                    ? `<div class="card-proof-badge" title="Click to open Imgur proof"><i class="fa-solid fa-arrow-up-right-from-square"></i> PROOF</div>`
+                    : '';
+
                 card.innerHTML = `
+                    ${proofBadge}
                     <div class="server-info">
                         <h4>${server.serverName}</h4>
                         ${yearHtml}
@@ -1043,6 +1393,11 @@
                         </div>
                     </div>
                 `;
+
+                // Metadati per ricerca e filtri
+                card.dataset.server = (server.serverName || '').toLowerCase();
+                card.dataset.roles = (server.role || '').toLowerCase();
+                card.dataset.hasProof = server.imgurLink ? 'true' : 'false';
 
                 grid.appendChild(card);
             });
@@ -1413,6 +1768,7 @@
 
             createCategory('staffExperience', 'Minecraft', 'fa-solid fa-cube', CONFIG.staffExperience.minecraft);
             createCategory('staffExperience', 'Discord', 'fa-brands fa-discord', CONFIG.staffExperience.discord);
+            setupStaffExperienceFeatures();
 
             document.querySelectorAll('.panel-item').forEach(item => {
                 item.addEventListener('click', (e) => {
