@@ -1,4 +1,4 @@
-const CACHE_NAME = '8qtw-pwa-v26';
+const CACHE_NAME = '8qtw-pwa-v27';
 const ASSETS = [
   './',
   './index.html',
@@ -6,7 +6,8 @@ const ASSETS = [
   './script.js',
   './manifest.json',
   './assets/avatar.jpg',
-  './assets/realistic_blue_rose.png'
+  './assets/three.min.js',
+  './assets/chrome_font.js'
 ];
 
 // Install Service Worker
