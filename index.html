@@ -944,7 +944,11 @@
                     { serverName: "VikurPractice (USA)", role: "★ SS VERIFIED", color: "#10b981", imgurLink: "https://imgur.com/a/Q0rT74N" },
                     { serverName: "DynamicPvP (ES)", role: "🛡️ MOD, ★ SS VERIFIED", color: "#3b82f6", imgurLink: "https://imgur.com/a/GRHniTt" },
                     { serverName: "SnowMC (ES)", role: "🛡️ MOD, ★ SS VERIFIED", color: "#3b82f6", imgurLink: "https://imgur.com/a/GRHniTt" },
-                    { serverName: "PrimeMC", role: "🛡️ MOD, ★ SS VERIFIED", color: "#3b82f6", imgurLink: null }
+                    { serverName: "PrimeMC", role: "🛡️ MOD, ★ SS VERIFIED", color: "#3b82f6", imgurLink: null },
+                    { serverName: "MineGhoul", role: "💼 SS Coordinator", color: "#ef4444", imgurLink: "https://imgur.com/a/9GApA38" },
+                    { serverName: "MineBack", role: "🛡️ MOD, 🎓 SS MENTOR", color: "#3b82f6", imgurLink: "https://imgur.com/26IwpzA" },
+                    { serverName: "MineCloud", role: "🛡️ MOD, 🎓 SS MENTOR", color: "#3b82f6", imgurLink: "https://imgur.com/Tqyp0Or" },
+                    { serverName: "SoloLegends", role: "🛡️ MOD, ★ SS VERIFIED", color: "#3b82f6", imgurLink: "https://imgur.com/a/RAywTce" }
                 ],
                 discord: [
                     { serverName: "MeowTools", role: "🔍 ScreenSharer", color: "#3b82f6", imgurLink: "https://imgur.com/a/FwRBLBY" },
@@ -961,7 +965,13 @@
                     { serverName: "OceanAC", role: "🔍 PC Checker", color: "#3b82f6", imgurLink: "https://imgur.com/a/1GlQEWJ" },
                     { serverName: "SSA", role: "🤝 SSA Staff", color: "#f59e0b", imgurLink: null },
                     { serverName: "Iris RBW", role: "💼 SS Manager", color: "#3b82f6", imgurLink: "https://imgur.com/a/0Ltsdrp" },
-                    { serverName: "International RBW", role: "🔍 ScreenSharer", color: "#3b82f6", imgurLink: "https://imgur.com/a/CieLwf8" }
+                    { serverName: "RBW International", role: "🔍 ScreenSharer", color: "#3b82f6", imgurLink: "https://imgur.com/a/ACqaizQ" },
+                    { serverName: "DemonHCF", role: "🔍 ScreenSharer", color: "#3b82f6", imgurLink: "https://imgur.com/a/BAcHvQd" },
+                    { serverName: "AxoraRBW", role: "🔍 ScreenSharer", color: "#3b82f6", imgurLink: "https://imgur.com/a/UkIb9AG" },
+                    { serverName: "FireballFight", role: "🔍 ScreenSharer", color: "#3b82f6", imgurLink: "https://imgur.com/a/MkbRqL7" },
+                    { serverName: "Ranked WoolWars", role: "🔍 ScreenSharer", color: "#3b82f6", imgurLink: "https://imgur.com/a/4DbbcAO" },
+                    { serverName: "GraveMethods Bypass", role: "⚙️ Sr. Helper", color: "#a855f7", imgurLink: "https://imgur.com/a/PSYP2XJ" },
+                    { serverName: "ScreenShare Test Your Bypass", role: "🔍 PC Checker", color: "#3b82f6", imgurLink: "https://imgur.com/a/AD1v03M" }
                 ]
             },
             links: [
@@ -1012,7 +1022,7 @@
                 const rolesHtml = roleList.map(r => {
                     let roleColor = server.color || '#3b82f6';
                     // Head SS e SS Manager sempre rosso
-                    if (/(head\s*ss|ss\s*manager)/i.test(r)) {
+                    if (/(head\s*ss|ss\s*manager|ss\s*coord)/i.test(r)) {
                         roleColor = '#ef4444';
                     } else if (/ss\s*verif/i.test(r) || /ss\s*veteran/i.test(r)) {
                         roleColor = '#10b981';
