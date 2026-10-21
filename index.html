@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>8qtw</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="assets/three.min.js"></script>
+    <script src="assets/chrome_font.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
@@ -38,39 +40,98 @@
             top: 0;
             left: 0;
             z-index: 100000000;
-            background: #000;
+            background: radial-gradient(circle at 50% 48%, rgba(255, 255, 255, 0.08) 0%, rgba(30, 41, 59, 0.15) 35%, rgba(0, 0, 0, 0.95) 75%, #000000 100%);
             width: 100%;
             height: 100%;
-            justify-content: center;
-            align-items: center;
             display: flex;
-            transition: opacity 0.4s ease-in-out;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s cubic-bezier(0.19, 1, 0.22, 1), transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
             cursor: pointer;
             overflow: hidden;
         }
 
-        #flowers-canvas {
+        .hero-hud {
             position: absolute;
-            top: 0;
-            left: 0;
+            inset: 0;
+            pointer-events: none;
+            z-index: 5;
+            padding: 24px 30px;
+            font-family: 'Inter', -apple-system, sans-serif;
+            color: rgba(255, 255, 255, 0.45);
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .hud-top-left {
+            position: absolute;
+            top: 24px;
+            left: 28px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hud-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #38bdf8;
+            box-shadow: 0 0 8px #38bdf8;
+            animation: blink-dot 2s infinite ease-in-out;
+        }
+
+        @keyframes blink-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.8); }
+        }
+
+        .hud-top-right {
+            position: absolute;
+            top: 24px;
+            right: 28px;
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        .hud-corner {
+            position: absolute;
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.18);
+            font-weight: 300;
+            line-height: 1;
+        }
+        .hud-bl { bottom: 24px; left: 28px; }
+        .hud-br { bottom: 24px; right: 28px; }
+
+        #chrome-hero-host {
+            position: absolute;
+            inset: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 1;
         }
 
-        #bg-start-audio h1 {
-            position: relative;
-            z-index: 2;
-            font-size: 1.15rem;
+        .hero-click-prompt {
+            position: absolute;
+            bottom: 45px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #888888;
+            font-size: 0.85rem;
             font-weight: 600;
             letter-spacing: 0.35em;
             text-transform: uppercase;
-            color: #ffffff;
-            text-shadow: 0 0 16px rgba(56, 189, 248, 0.8), 0 0 35px rgba(37, 99, 235, 0.5);
-            transition: transform 0.2s ease, text-shadow 0.2s ease;
             user-select: none;
-            animation: pulse-glow 2.5s infinite alternate ease-in-out;
+            pointer-events: none;
+            animation: pulse-blink 2.2s infinite ease-in-out;
+            font-family: 'Inter', sans-serif;
+            z-index: 10;
+        }
+
+        @keyframes pulse-blink {
+            0%, 100% { opacity: 0.35; color: #666666; }
+            50% { opacity: 1; color: #ffffff; text-shadow: 0 0 15px rgba(255, 255, 255, 0.9); }
         }
 
         #bg-start-audio:hover h1 {
@@ -1010,11 +1071,22 @@
 
 <body>
     <div id="bg-start-audio" onclick="revealApp()">
-        <canvas id="flowers-canvas"></canvas>
-        <h1>[ click to enter ]</h1>
+        <div id="chrome-hero-host"></div>
+        <div class="hero-hud">
+            <div class="hud-top-left">
+                <span class="hud-dot"></span>
+                <span>8QTW // SYSTEM ONLINE</span>
+            </div>
+            <div class="hud-top-right">
+                <span>UID: #0821 &bull; FORENSICS</span>
+            </div>
+            <div class="hud-corner hud-bl">+</div>
+            <div class="hud-corner hud-br">+</div>
+        </div>
+        <p class="hero-click-prompt">[ click to enter ]</p>
     </div>
 
-    <audio id="bg-music" loop>
+    <audio id="bg-music" loop autoplay>
         <source src="assets/music.m4a" type="audio/mp4">
         Il tuo browser non supporta l'elemento audio.
     </audio>
@@ -1510,139 +1582,320 @@
             }
         });
 
-        // Fast Rising Blue Flowers Canvas Animation
-        let flowerAnimId = null;
-        function initBlueFlowers() {
-            const canvas = document.getElementById('flowers-canvas');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            let width = (canvas.width = window.innerWidth);
-            let height = (canvas.height = window.innerHeight);
+                // 3D Chrome 8QTW Hero Scene (Identical to noiz.bio)
+        let chromeAnimId = null;
+        let chromeRenderer = null;
+        let chromeScene = null;
 
-            const handleResize = () => {
-                if (!canvas) return;
-                width = canvas.width = window.innerWidth;
-                height = canvas.height = window.innerHeight;
+        function initChromeHero() {
+            const host = document.getElementById('chrome-hero-host');
+            if (!host || typeof THREE === 'undefined' || typeof CHROME_FONT_DATA === 'undefined') return;
+
+            const scene = new THREE.Scene();
+            chromeScene = scene;
+            const camera = new THREE.PerspectiveCamera(36, window.innerWidth / window.innerHeight, 0.1, 100);
+            camera.position.set(0, 0, 7.5);
+
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
+            chromeRenderer = renderer;
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1.0;
+            renderer.outputEncoding = THREE.sRGBEncoding;
+            host.appendChild(renderer.domElement);
+
+            // Studio for metallic chrome reflection
+            const studio = new THREE.Scene();
+            const roomGeo = new THREE.BoxGeometry(40, 32, 16);
+            const roomMat = new THREE.MeshBasicMaterial({ color: 0x020204, side: THREE.BackSide });
+            studio.add(new THREE.Mesh(roomGeo, roomMat));
+
+            function addLightStrip(w, h, color, intensity, x, y, z) {
+                const geo = new THREE.PlaneGeometry(w, h);
+                const mat = new THREE.MeshBasicMaterial({ color: new THREE.Color(color).multiplyScalar(intensity), side: THREE.DoubleSide });
+                const mesh = new THREE.Mesh(geo, mat);
+                mesh.position.set(x, y, z);
+                mesh.lookAt(0, 0, 0);
+                studio.add(mesh);
+            }
+
+            addLightStrip(34, 6, 0xffffff, 3.2, 0, 5, 12);     // Top main light
+            addLightStrip(34, 1.2, 0xffffff, 8.0, 0, 8, 11);    // Razor top highlight
+            addLightStrip(34, 3, 0x888888, 1.5, 0, -8, 8);      // Under fill
+            addLightStrip(1.5, 18, 0xffffff, 8.0, -14, 1, -2);  // Left edge rim
+            addLightStrip(1.5, 18, 0xffffff, 8.0, 14, 1, -2);   // Right edge rim
+            addLightStrip(16, 16, 0xffffff, 1.5, 0, 15, 0);     // Top roof
+            addLightStrip(10, 1.5, 0xaaaaaa, 3.5, 0, -3, -10);  // Back ground rim
+
+            const pmrem = new THREE.PMREMGenerator(renderer);
+            pmrem.compileEquirectangularShader();
+            const envMap = pmrem.fromScene(studio, 0.04).texture;
+            scene.environment = envMap;
+
+            // Studio Lights & Direct Illumination for Crisp White Front
+            const dirLightFront = new THREE.DirectionalLight(0xffffff, 2.2);
+            dirLightFront.position.set(0, 4, 12);
+            scene.add(dirLightFront);
+
+            const dirLightFill = new THREE.DirectionalLight(0xddeeff, 1.4);
+            dirLightFill.position.set(-6, -2, 8);
+            scene.add(dirLightFill);
+
+            const ambLight = new THREE.AmbientLight(0xffffff, 1.2);
+            scene.add(ambLight);
+
+            // Two-tone 3D Materials (Pure White Glossy Front + Dark Chrome Bevel/Sides like NOIZ)
+            const frontMaterial = new THREE.MeshPhysicalMaterial({
+                color: 0xffffff,
+                metalness: 0.04,
+                roughness: 0.06,
+                clearcoat: 1.0,
+                clearcoatRoughness: 0.03,
+                reflectivity: 0.95,
+                envMap: envMap
+            });
+
+            const sideMaterial = new THREE.MeshPhysicalMaterial({
+                color: 0x15151c,
+                emissive: 0x050508,
+                metalness: 0.95,
+                roughness: 0.12,
+                clearcoat: 0.5,
+                clearcoatRoughness: 0.08,
+                envMap: envMap
+            });
+
+            const materials = [frontMaterial, sideMaterial];
+
+            const fontLoader = new THREE.FontLoader();
+            const font = fontLoader.parse(CHROME_FONT_DATA);
+
+            const group = new THREE.Group();
+            scene.add(group);
+
+            const displayText = "8QTW";
+
+            const textGeo = new THREE.TextGeometry(displayText, {
+                font: font,
+                size: 1.55,
+                height: 0.42,
+                curveSegments: 16,
+                bevelEnabled: true,
+                bevelThickness: 0.08,
+                bevelSize: 0.035,
+                bevelSegments: 6
+            });
+
+            // Cylindrical perspective curvature (just like noiz.bio)
+            textGeo.center();
+            const posAttr = textGeo.attributes.position;
+            const v = new THREE.Vector3();
+
+            for (let i = 0; i < posAttr.count; i++) {
+                v.fromBufferAttribute(posAttr, i);
+                let curveRadius = 7.0;
+                let angle = v.x / curveRadius;
+                let zOffset = curveRadius * (1 - Math.cos(angle)) * 0.75;
+                let newX = curveRadius * Math.sin(angle);
+                let newZ = v.z - zOffset;
+                posAttr.setXYZ(i, newX, v.y + Math.sin(angle * 1.5) * 0.15, newZ);
+            }
+            textGeo.computeVertexNormals();
+
+            const textMesh = new THREE.Mesh(textGeo, materials);
+            group.add(textMesh);
+
+            // Floating Ambient Dust / Stardust Particles in 3D
+            const dustCount = 75;
+            const dustGeo = new THREE.BufferGeometry();
+            const dustPositions = new Float32Array(dustCount * 3);
+            const dustVelocities = [];
+
+            for (let i = 0; i < dustCount; i++) {
+                dustPositions[i * 3 + 0] = (Math.random() - 0.5) * 16;
+                dustPositions[i * 3 + 1] = (Math.random() - 0.5) * 10;
+                dustPositions[i * 3 + 2] = (Math.random() - 0.5) * 9 - 1.5;
+                dustVelocities.push({
+                    vx: (Math.random() - 0.5) * 0.003,
+                    vy: Math.random() * 0.003 + 0.002, // gentle slow upward drift
+                    vz: (Math.random() - 0.5) * 0.002
+                });
+            }
+            dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPositions, 3));
+
+            const canvasP = document.createElement('canvas');
+            canvasP.width = 32;
+            canvasP.height = 32;
+            const pctx = canvasP.getContext('2d');
+            const pgrad = pctx.createRadialGradient(16, 16, 0, 16, 16, 16);
+            pgrad.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
+            pgrad.addColorStop(0.35, 'rgba(180, 215, 255, 0.45)');
+            pgrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            pctx.fillStyle = pgrad;
+            pctx.fillRect(0, 0, 32, 32);
+            const pTexture = new THREE.CanvasTexture(canvasP);
+
+            const dustMat = new THREE.PointsMaterial({
+                size: 0.15,
+                map: pTexture,
+                transparent: true,
+                opacity: 0.6,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+
+            const dustPoints = new THREE.Points(dustGeo, dustMat);
+            scene.add(dustPoints);
+
+            // Sparkles / Starburst Glints Shader
+            const sparkleVertex = `
+                uniform float uTime;
+                uniform float uSize;
+                uniform float uPhase;
+                uniform float uSpeed;
+                varying vec2 vUv;
+                varying float vI;
+                void main() {
+                    float tw = pow(max(0.0, sin(uTime * uSpeed + uPhase)), 6.0);
+                    float k = 0.2 + tw * 1.4;
+                    vI = k;
+                    vec4 mv = modelViewMatrix * vec4(0.0, 0.0, 0.0, 1.0);
+                    mv.xy += position.xy * uSize * (0.5 + 0.6 * k);
+                    gl_Position = projectionMatrix * mv;
+                    vUv = uv;
+                }
+            `;
+
+            const sparkleFragment = `
+                uniform vec3 uColor;
+                varying vec2 vUv;
+                varying float vI;
+                float streak(vec2 p, float len, float width) {
+                    return exp(-abs(p.y) * width) * pow(max(0.0, 1.0 - abs(p.x) / len), 2.5);
+                }
+                void main() {
+                    vec2 p = vUv * 2.0 - 1.0;
+                    float r2 = dot(p, p);
+                    float core = exp(-r2 * 75.0) * 2.0 + exp(-r2 * 12.0) * 0.4;
+                    float c = 0.8253, s = 0.5646;
+                    vec2 d = vec2(c * p.x + s * p.y, -s * p.x + c * p.y);
+                    float a = core
+                        + streak(d, 1.0, 80.0) * 1.2
+                        + streak(vec2(d.y, d.x), 0.55, 90.0) * 0.75
+                        + streak(p, 0.45, 120.0) * 0.35
+                        + streak(vec2(p.y, p.x), 0.45, 120.0) * 0.35;
+                    a *= vI;
+                    gl_FragColor = vec4(uColor * a, a);
+                }
+            `;
+
+            const sparklePlaneGeo = new THREE.PlaneGeometry(1.6, 1.6);
+            const sparkleMaterials = [];
+
+            // Corner positions on 8QTW
+            const sparklePositions = [
+                [-2.6, 0.72, 0.3],
+                [-2.1, -0.65, 0.25],
+                [-0.75, 0.75, 0.35],
+                [0.65, 0.78, 0.35],
+                [2.3, 0.74, 0.3],
+                [2.8, -0.65, 0.25]
+            ];
+
+            sparklePositions.forEach((pos, idx) => {
+                const mat = new THREE.ShaderMaterial({
+                    vertexShader: sparkleVertex,
+                    fragmentShader: sparkleFragment,
+                    uniforms: {
+                        uTime: { value: 0 },
+                        uSize: { value: 0.65 + (idx % 3) * 0.15 },
+                        uPhase: { value: idx * 1.25 },
+                        uSpeed: { value: 1.2 + (idx % 2) * 0.6 },
+                        uColor: { value: new THREE.Color(0xffffff) }
+                    },
+                    transparent: true,
+                    blending: THREE.AdditiveBlending,
+                    depthWrite: false
+                });
+                sparkleMaterials.push(mat);
+
+                const sMesh = new THREE.Mesh(sparklePlaneGeo, mat);
+                sMesh.position.set(pos[0], pos[1], pos[2]);
+                group.add(sMesh);
+            });
+
+            // Interactive Mouse Parallax
+            let mouseX = 0, mouseY = 0;
+            let targetX = 0, targetY = 0;
+
+            const onMouseMove = (e) => {
+                mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+                mouseY = (e.clientY / window.innerHeight) * 2 - 1;
             };
-            window.addEventListener('resize', handleResize);
+            window.addEventListener('mousemove', onMouseMove);
 
-            const colors = [
-                '#38bdf8', // sky blue
-                '#60a5fa', // soft blue
-                '#2563eb', // royal blue
-                '#00b4d8', // neon cyan-blue
-                '#1d4ed8', // deep sapphire
-                '#93c5fd'  // light ice blue
-            ];
-
-            const centerColors = [
-                '#e0f2fe',
-                '#bae6fd',
-                '#ffffff',
-                '#38bdf8'
-            ];
-
-            // Petali Blu che scendono morbidamente dall'alto
-            class FallingPetal {
-                constructor(isInitial = false) {
-                    this.reset(isInitial);
+            const onTouchMove = (e) => {
+                if (e.touches.length > 0) {
+                    mouseX = (e.touches[0].clientX / window.innerWidth) * 2 - 1;
+                    mouseY = (e.touches[0].clientY / window.innerHeight) * 2 - 1;
                 }
+            };
+            window.addEventListener('touchmove', onTouchMove, { passive: true });
 
-                reset(isInitial = false) {
-                    this.x = Math.random() * (width + 100) - 50;
-                    this.y = isInitial ? Math.random() * height : -30 - Math.random() * 40;
-                    this.size = Math.random() * 12 + 13; // 13px to 25px
-                    // Cadono dall'alto in modo naturale ed elegante
-                    this.vy = Math.random() * 1.8 + 1.6; // 1.6px a 3.4px per frame
-                    this.vx = (Math.random() - 0.35) * 0.9; // leggera brezza
-                    this.swayAngle = Math.random() * Math.PI * 2;
-                    this.swaySpeed = Math.random() * 0.03 + 0.02;
-                    this.swayAmp = Math.random() * 1.8 + 1.2;
+            function updateScale() {
+                const aspect = window.innerWidth / window.innerHeight;
+                camera.aspect = aspect;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
 
-                    // Rotazione e capovolgimento 3D (tumbling nel vento)
-                    this.angle = Math.random() * Math.PI * 2;
-                    this.rotSpeed = (Math.random() - 0.5) * 0.025;
-                    this.flip = Math.random() * Math.PI * 2;
-                    this.flipSpeed = Math.random() * 0.04 + 0.02;
+                let s = Math.min(window.innerWidth / 850, 1.35);
+                if (window.innerWidth < 600) s = window.innerWidth / 440;
+                group.scale.set(s, s, s);
+            }
+            window.addEventListener('resize', updateScale);
+            updateScale();
 
-                    // Colori realistici petali blu
-                    const colorThemes = [
-                        { dark: '#1e3a8a', mid: '#2563eb', light: '#93c5fd' }, // Royal Blue
-                        { dark: '#1d4ed8', mid: '#38bdf8', light: '#bae6fd' }, // Sky/Electric
-                        { dark: '#0f172a', mid: '#1d4ed8', light: '#60a5fa' }, // Deep Velvet Navy
-                        { dark: '#0369a1', mid: '#0ea5e9', light: '#e0f2fe' }  // Ice Cyan-Blue
-                    ];
-                    this.palette = colorThemes[Math.floor(Math.random() * colorThemes.length)];
-                    this.opacity = Math.random() * 0.35 + 0.65;
+            const clock = new THREE.Clock();
+
+            function animate() {
+                chromeAnimId = requestAnimationFrame(animate);
+
+                const elapsed = clock.getElapsedTime();
+
+                sparkleMaterials.forEach(m => {
+                    m.uniforms.uTime.value = elapsed;
+                });
+
+                // Animate Dust Particles
+                const dPos = dustGeo.attributes.position.array;
+                for (let i = 0; i < dustCount; i++) {
+                    dPos[i * 3 + 0] += dustVelocities[i].vx;
+                    dPos[i * 3 + 1] += dustVelocities[i].vy;
+                    dPos[i * 3 + 2] += dustVelocities[i].vz;
+
+                    if (dPos[i * 3 + 1] > 5) dPos[i * 3 + 1] = -5;
+                    if (dPos[i * 3 + 0] > 8) dPos[i * 3 + 0] = -8;
+                    if (dPos[i * 3 + 0] < -8) dPos[i * 3 + 0] = 8;
                 }
+                dustGeo.attributes.position.needsUpdate = true;
+                dustPoints.rotation.y = targetX * 0.45;
+                dustPoints.rotation.x = targetY * 0.35;
 
-                update() {
-                    this.y += this.vy;
-                    this.swayAngle += this.swaySpeed;
-                    this.x += Math.sin(this.swayAngle) * this.swayAmp + this.vx;
+                targetX += (mouseX * 0.38 - targetX) * 0.06;
+                targetY += (-mouseY * 0.28 - targetY) * 0.06;
 
-                    this.angle += this.rotSpeed;
-                    this.flip += this.flipSpeed;
+                group.rotation.y = targetX;
+                group.rotation.x = targetY;
+                group.position.y = Math.sin(elapsed * 1.2) * 0.08;
 
-                    // Quando escono dal fondo dello schermo, rinascono sopra
-                    if (this.y > height + 40 || this.x < -60 || this.x > width + 60) {
-                        this.reset(false);
-                    }
-                }
-
-                draw() {
-                    ctx.save();
-                    ctx.translate(this.x, this.y);
-                    ctx.rotate(this.angle);
-                    // Effetto 3D realistico: il petalo volteggia ruotando su se stesso nell'aria
-                    const flipScale = Math.cos(this.flip);
-                    ctx.scale(flipScale, 1);
-                    ctx.globalAlpha = this.opacity;
-
-                    // Sfumatura realistica del petalo dal calice alla punta
-                    const grad = ctx.createLinearGradient(0, -this.size, 0, this.size);
-                    grad.addColorStop(0, this.palette.dark);
-                    grad.addColorStop(0.55, this.palette.mid);
-                    grad.addColorStop(1, this.palette.light);
-
-                    ctx.beginPath();
-                    ctx.moveTo(0, -this.size * 0.9);
-                    // Curvatura organica a goccia del petalo di rosa
-                    ctx.bezierCurveTo(this.size * 0.75, -this.size * 0.5, this.size * 0.8, this.size * 0.5, 0, this.size);
-                    ctx.bezierCurveTo(-this.size * 0.8, this.size * 0.5, -this.size * 0.75, -this.size * 0.5, 0, -this.size * 0.9);
-
-                    ctx.fillStyle = grad;
-                    ctx.shadowColor = 'rgba(56, 189, 248, 0.45)';
-                    ctx.shadowBlur = 10;
-                    ctx.fill();
-
-                    // Riflesso delicato di luce sul bordo del petalo
-                    ctx.lineWidth = 0.8;
-                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
-                    ctx.stroke();
-
-                    ctx.restore();
-                }
+                renderer.render(scene, camera);
             }
 
-            const petalCount = Math.min(Math.floor((width * height) / 14000), 75) || 50;
-            const petals = [];
-            for (let i = 0; i < petalCount; i++) {
-                petals.push(new FallingPetal(true));
-            }
-
-            function loop() {
-                ctx.clearRect(0, 0, width, height);
-                for (let i = 0; i < petals.length; i++) {
-                    petals[i].update();
-                    petals[i].draw();
-                }
-                flowerAnimId = requestAnimationFrame(loop);
-            }
-            loop();
+            animate();
         }
 
-        initBlueFlowers();
+        initChromeHero();
 
         function ghostCursor(options) {
             let hasWrapperEl = options && options.element;
@@ -1724,17 +1977,22 @@
         ghostCursor({});
 
         function revealApp() {
-            if (flowerAnimId) {
-                cancelAnimationFrame(flowerAnimId);
-                flowerAnimId = null;
+            if (chromeAnimId) {
+                cancelAnimationFrame(chromeAnimId);
+                chromeAnimId = null;
             }
             const overlay = document.getElementById('bg-start-audio');
             if (overlay) {
                 overlay.style.opacity = '0';
+                overlay.style.transform = 'scale(1.04)';
                 overlay.style.pointerEvents = 'none';
                 setTimeout(() => {
                     overlay.remove();
-                }, 300);
+                    if (chromeRenderer) {
+                        chromeRenderer.dispose();
+                        chromeRenderer = null;
+                    }
+                }, 500);
             }
             document.body.style.overflowY = 'auto';
             const app = document.querySelector('.app-container');
@@ -1761,7 +2019,48 @@
         window.addEventListener('touchstart', revealApp, { capture: true, once: true });
         window.addEventListener('keydown', revealApp, { capture: true, once: true });
 
+        
+        // Bulletproof Background Audio Engine
+        function startAudioImmediately() {
+            const bgMusic = document.getElementById('bg-music');
+            if (!bgMusic) return;
+            bgMusic.volume = 0.075;
+
+            let isAudioPlaying = false;
+
+            function attemptAudioPlay() {
+                if (isAudioPlaying) return;
+                const playPromise = bgMusic.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        isAudioPlaying = true;
+                        cleanupAudioTriggers();
+                    }).catch(() => {
+                        // Browser autoplay policy blocked 0-interaction audio; will unlock on first gesture
+                    });
+                }
+            }
+
+            const gestureEvents = ['pointerdown', 'mousedown', 'touchstart', 'click', 'keydown'];
+
+            function cleanupAudioTriggers() {
+                gestureEvents.forEach(evt => {
+                    window.removeEventListener(evt, attemptAudioPlay, true);
+                    document.removeEventListener(evt, attemptAudioPlay, true);
+                });
+            }
+
+            gestureEvents.forEach(evt => {
+                window.addEventListener(evt, attemptAudioPlay, { capture: true, passive: true });
+                document.addEventListener(evt, attemptAudioPlay, { capture: true, passive: true });
+            });
+
+            // Try immediately on script load
+            attemptAudioPlay();
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
+            startAudioImmediately();
             initializeProfile();
 
             createGenericCards('.bio-links-grid', CONFIG.links);
