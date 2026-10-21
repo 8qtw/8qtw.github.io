@@ -1146,6 +1146,176 @@
             max-width: 280px;
         }
 
+    
+        /* Proof Lightbox Modal */
+        .proof-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.25rem;
+        }
+
+        .proof-modal-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.88);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            animation: modal-fade-in 0.25s ease forwards;
+        }
+
+        .proof-modal-content {
+            position: relative;
+            z-index: 2;
+            background: #0d0d11;
+            border: 1px solid var(--border-secondary);
+            border-radius: 16px;
+            max-width: 960px;
+            width: 100%;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.95), 0 0 35px rgba(56, 189, 248, 0.15);
+            animation: modal-zoom-in 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            overflow: hidden;
+        }
+
+        @keyframes modal-fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes modal-zoom-in {
+            from { opacity: 0; transform: scale(0.93) translateY(12px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .proof-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.4rem;
+            border-bottom: 1px solid var(--border-primary);
+            background: rgba(18, 18, 22, 0.95);
+        }
+
+        .proof-modal-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            flex-wrap: wrap;
+        }
+
+        .proof-modal-title-wrap h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 0;
+            letter-spacing: -0.01em;
+        }
+
+        .proof-modal-close {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-primary);
+            color: var(--text-secondary);
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.2s ease;
+        }
+
+        .proof-modal-close:hover {
+            color: #ffffff;
+            background: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 0.5);
+            transform: scale(1.05);
+        }
+
+        .proof-modal-body {
+            position: relative;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #070709;
+            min-height: 280px;
+            max-height: calc(90vh - 140px);
+        }
+
+        .proof-modal-body img {
+            max-width: 100%;
+            max-height: calc(90vh - 160px);
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            display: block;
+        }
+
+        .proof-image-loader {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-tertiary);
+            font-size: 0.85rem;
+            pointer-events: none;
+        }
+
+        .proof-spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #38bdf8;
+            border-radius: 50%;
+            animation: spinner-spin 0.8s linear infinite;
+        }
+
+        @keyframes spinner-spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .proof-modal-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1.4rem;
+            border-top: 1px solid var(--border-primary);
+            background: rgba(18, 18, 22, 0.95);
+            font-size: 0.8rem;
+        }
+
+        .proof-modal-hint {
+            color: var(--text-tertiary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .proof-external-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #38bdf8;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .proof-external-btn:hover {
+            color: #7dd3fc;
+            text-decoration: underline;
+        }
+
     </style>
 </head>
 
@@ -1476,6 +1646,87 @@
             });
         }
 
+        
+        const IMGUR_MAP = {"https://imgur.com/a/GRHniTt": "https://i.imgur.com/lc2xJ7yh.jpg", "https://imgur.com/a/BAcHvQd": "https://i.imgur.com/fF6aNDSh.jpg", "https://imgur.com/26IwpzA": "https://i.imgur.com/26IwpzA.png", "https://imgur.com/a/4DbbcAO": "https://i.imgur.com/eCvnTdUh.jpg", "https://imgur.com/a/ivlSXNe": "https://i.imgur.com/pqNdOcsh.jpg", "https://imgur.com/a/4XdZHgi": "https://i.imgur.com/v0LV58Yh.jpg", "https://imgur.com/yqRYbja": "https://i.imgur.com/yqRYbja.png", "https://imgur.com/a/v07ll8H": "https://i.imgur.com/35aRgiYh.jpg", "https://imgur.com/a/9GApA38": "https://i.imgur.com/B6xAy91h.jpg", "https://imgur.com/a/838wVfg": "https://i.imgur.com/l04uPJ6h.jpg", "https://imgur.com/a/t5YtoFL": "https://i.imgur.com/nScqMSAh.jpg", "https://imgur.com/a/1GlQEWJ": "https://i.imgur.com/f1ObiP8h.jpg", "https://imgur.com/a/PSYP2XJ": "https://i.imgur.com/BWewdcah.jpg", "https://imgur.com/a/nFFz0dQ": "https://i.imgur.com/91h9DVCh.jpg", "https://imgur.com/a/PsoRMCv": "https://i.imgur.com/tRsPhpHh.jpg", "https://imgur.com/a/0Ltsdrp": "https://i.imgur.com/fy4PQOUh.jpg", "https://imgur.com/a/ACqaizQ": "https://i.imgur.com/2artnLph.jpg", "https://imgur.com/a/F7t1SWO": "https://i.imgur.com/iFFXrQjh.jpg", "https://imgur.com/a/Q0rT74N": "https://i.imgur.com/ZWUqYP7h.jpg", "https://imgur.com/a/LGplXEV": "https://i.imgur.com/eqppqsdh.jpg", "https://imgur.com/a/xjrzeUL": "https://i.imgur.com/Zg6tNh7h.jpg", "https://imgur.com/a/CnvgGIg": "https://i.imgur.com/yn20NM5h.jpg", "https://imgur.com/a/brGuN6b": "https://i.imgur.com/eDME7nth.jpg", "https://imgur.com/a/Q8ILncG": "https://i.imgur.com/QDqh7zXh.jpg", "https://imgur.com/a/AD1v03M": "https://i.imgur.com/RYfjVuTh.jpg", "https://imgur.com/a/COl8Gw2": "https://i.imgur.com/IUJpi37h.jpg", "https://imgur.com/a/MkbRqL7": "https://i.imgur.com/oD2CTA3h.jpg", "https://imgur.com/a/5hVfiWN": "https://i.imgur.com/Hcw8sTHh.jpg", "https://imgur.com/a/r24FSn3": "https://i.imgur.com/AJFHAX8h.jpg", "https://imgur.com/a/FwRBLBY": "https://i.imgur.com/GYNlq2ah.jpg", "https://imgur.com/a/UkIb9AG": "https://i.imgur.com/85oH1kwh.jpg", "https://imgur.com/Tqyp0Or": "https://i.imgur.com/Tqyp0Or.png", "https://imgur.com/a/RAywTce": "https://i.imgur.com/tFzwqolh.jpg"};
+
+        function openProofModal(serverName, role, color, rawUrl) {
+            const modal = document.getElementById('proofModal');
+            if (!modal) return;
+
+            const titleEl = document.getElementById('proofModalServerName');
+            const rolesEl = document.getElementById('proofModalRoles');
+            const imgEl = document.getElementById('proofModalImage');
+            const loaderEl = document.getElementById('proofImageLoader');
+            const externalLink = document.getElementById('proofModalExternalLink');
+
+            if (titleEl) titleEl.textContent = serverName;
+
+            // Render badges in modal
+            if (rolesEl) {
+                const roleList = role ? role.split(',').map(r => r.trim()).filter(Boolean) : [];
+                rolesEl.innerHTML = roleList.map(r => {
+                    let roleColor = color || '#3b82f6';
+                    if (/(head\s*ss|ss\s*manager|ss\s*coord)/i.test(r)) {
+                        roleColor = '#ef4444';
+                    } else if (/ss\s*verif/i.test(r) || /ss\s*veteran/i.test(r)) {
+                        roleColor = '#10b981';
+                    } else if (/helper/i.test(r) && (!color || color === '#3b82f6')) {
+                        roleColor = '#a855f7';
+                    }
+                    const bg = hexToRgba(roleColor, 0.12);
+                    const border = hexToRgba(roleColor, 0.25);
+                    return `<span class="server-role" style="background: ${bg}; border-color: ${border}; color: ${roleColor};">${r}</span>`;
+                }).join('');
+            }
+
+            if (externalLink) {
+                externalLink.href = rawUrl || '#';
+            }
+
+            // Direct image URL
+            const directUrl = IMGUR_MAP[rawUrl] || (rawUrl && !rawUrl.includes('/a/') ? `https://i.imgur.com/${rawUrl.split('/').pop()}.png` : rawUrl);
+
+            if (imgEl && loaderEl) {
+                loaderEl.style.display = 'flex';
+                imgEl.style.display = 'none';
+
+                imgEl.onload = () => {
+                    loaderEl.style.display = 'none';
+                    imgEl.style.display = 'block';
+                };
+                imgEl.onerror = () => {
+                    loaderEl.innerHTML = '<span>Could not load image directly. <a href="' + rawUrl + '" target="_blank" style="color:#38bdf8; text-decoration:underline;">Click here to open on Imgur</a></span>';
+                };
+                imgEl.src = directUrl;
+            }
+
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeProofModal() {
+            const modal = document.getElementById('proofModal');
+            if (modal) {
+                modal.style.display = 'none';
+                const imgEl = document.getElementById('proofModalImage');
+                if (imgEl) imgEl.src = '';
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // Modal event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            const closeBtn = document.getElementById('proofModalCloseBtn');
+            const backdrop = document.getElementById('proofModalBackdrop');
+
+            if (closeBtn) closeBtn.addEventListener('click', closeProofModal);
+            if (backdrop) backdrop.addEventListener('click', closeProofModal);
+
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeProofModal();
+            });
+        });
+
         function initializeProfile() {
             const avatarContainer = document.getElementById('profileAvatar');
             avatarContainer.innerHTML = `<img src="${CONFIG.profile.avatar}" alt="Profile avatar">`;
@@ -1505,7 +1756,10 @@
                 card.className = 'server-card';
 
                 if (server.imgurLink) {
-                    card.addEventListener('click', () => window.open(server.imgurLink, '_blank', 'noopener,noreferrer'));
+                    card.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        openProofModal(server.serverName, server.role, server.color, server.imgurLink);
+                    });
                 } else {
                     card.style.cursor = 'default';
                 }
@@ -2283,6 +2537,35 @@
         });
 
     </script>
+
+    <!-- In-Site Proof Lightbox Modal -->
+    <div id="proofModal" class="proof-modal" style="display: none;">
+        <div class="proof-modal-backdrop" id="proofModalBackdrop"></div>
+        <div class="proof-modal-content">
+            <div class="proof-modal-header">
+                <div class="proof-modal-title-wrap">
+                    <h3 id="proofModalServerName">Server</h3>
+                    <div id="proofModalRoles" class="server-roles-wrap"></div>
+                </div>
+                <button class="proof-modal-close" id="proofModalCloseBtn" title="Close (ESC)">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="proof-modal-body">
+                <div class="proof-image-loader" id="proofImageLoader">
+                    <div class="proof-spinner"></div>
+                    <span>Loading proof...</span>
+                </div>
+                <img id="proofModalImage" referrerpolicy="no-referrer" src="" alt="Proof Screenshot" />
+            </div>
+            <div class="proof-modal-footer">
+                <span class="proof-modal-hint"><i class="fa-regular fa-keyboard"></i> Press ESC or click outside to close</span>
+                <a id="proofModalExternalLink" href="#" target="_blank" rel="noopener noreferrer" class="proof-external-btn">
+                    <span>Open on Imgur</span> <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+            </div>
+        </div>
+    </div>
 
 </body>
 
