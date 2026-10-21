@@ -694,9 +694,15 @@
 
         .bio-links-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 1rem;
             margin-top: 1rem;
+        }
+
+        @media (max-width: 700px) {
+            .bio-links-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         @keyframes fadeInUp {
@@ -1533,7 +1539,8 @@
             },
             links: [
                 { name: "Discord", role: "8qtw", icon: "fa-brands fa-discord", color: "#5865F2", link: "https://discord.com/users/1485744426084204738" },
-                { name: "Telegram", role: "@qtw21", icon: "fa-brands fa-telegram", color: "#229ED9", link: "https://t.me/qtw21" }
+                { name: "Telegram", role: "@qtw21", icon: "fa-brands fa-telegram", color: "#229ED9", link: "https://t.me/qtw21" },
+                { name: "NameMC", role: "CiaoBypasso", icon: "fa-solid fa-cube", color: "#10b981", link: "https://namemc.com/profile/CiaoBypasso" }
             ]
         };
 
